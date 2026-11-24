@@ -64,7 +64,7 @@
 
 ### 💡 문장에 맞는 이모지 추천
 
-<img src="docs/images/recommend.png" width="360" align="right" alt="문장 추천 화면">
+<img src="docs/images/recommend.png" width="400" align="right" alt="문장 추천 화면">
 
 글을 쓰다가 `Ctrl` + `Win` + `.` 을 누르면, 커서 앞 문장에 어울리는 이모지가 맨 위 **✨추천** 칸에 먼저 나와요.
 
@@ -193,6 +193,7 @@ mkdir -p dist && NOSIGN=1 bash build.sh   # → dist/EmojiPicker.exe
 
 - 이모지 검색 데이터는 `src/emoji-picker-extension` (data.js, picker.js) 에서 가져와요.
 - 서명 없이 빌드돼요. (`signing/` 폴더는 저장소에 없어요)
+- 점검: `mono dist/EmojiPicker.exe --search 울음 해`
 
 ### 폴더 구성
 
@@ -201,7 +202,6 @@ mkdir -p dist && NOSIGN=1 bash build.sh   # → dist/EmojiPicker.exe
 | `src/emoji-picker-windows` | Windows 프로그램 소스 (C#) |
 | `src/emoji-picker-extension` | 크롬 확장 프로그램 + 이모지 검색 데이터 원본 |
 | `web` | 휴대폰 웹앱 (PWA) |
-- 점검: `mono dist/EmojiPicker.exe --search 울음 해`
 
 ---
 
