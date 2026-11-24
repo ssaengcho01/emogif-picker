@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<title>이모지 피커</title>
+<title>EmoGIF Picker</title>
 <meta name="theme-color" content="#ffffff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="이모지">
+<meta name="apple-mobile-web-app-title" content="EmoGIF">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="icon-192.png">
@@ -54,8 +54,10 @@ input:focus { border-color: var(--accent); }
 .grid { display: grid; grid-template-columns: repeat(8, 1fr); }
 .e { border: 0; background: none; aspect-ratio: 1; padding: 0; border-radius: 10px; font-size: 28px; line-height: 1; color: var(--fg);
   font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",-apple-system,sans-serif; overflow: hidden; }
-.e.sym { font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans Symbols 2", "Segoe UI Symbol", sans-serif; font-size: 24px; }
+.e.sym { white-space: nowrap; font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans Symbols 2", "Segoe UI Symbol", sans-serif; font-size: 24px; }
 .e.sym.long { font-size: 15px; }
+.e.sym.wide2 { grid-column: span 2; aspect-ratio: auto; font-size: 15px; white-space: nowrap; overflow: hidden; }
+.e.sym.wide4 { grid-column: span 4; aspect-ratio: auto; font-size: 15px; white-space: nowrap; overflow: hidden; }
 .e:active { background: var(--hover); }
 .pics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding-top: 6px; }
 .pics.four { grid-template-columns: repeat(4, 1fr); }

@@ -1,6 +1,6 @@
 {
-  "name": "이모지 피커",
-  "short_name": "이모지",
+  "name": "EmoGIF Picker",
+  "short_name": "EmoGIF",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

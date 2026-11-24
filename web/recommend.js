@@ -131,7 +131,8 @@
       const c = text[i];
       if (c === "\n") { flush(); let j = i; while (j < text.length && text[j] === "\n") j++; parts.push(text.slice(i, j)); i = j; continue; }
       cur += c; i++;
-      if (c === "." && /\d/.test(text[i - 2]) && /\d/.test(text[i])) continue;
+      // "."는 뒤가 공백·줄바꿈·글 끝일 때만 문장 끝 (4.5 같은 소수점, www.a.com 같은 주소는 안 나눔)
+      if (c === "." && i < text.length && !/\s/.test(text[i]) && !P.includes(text[i])) continue;
       let end = false;
       if (P.includes(c) && !(i < text.length && P.includes(text[i]))) end = true;
       if (J.includes(c) && !(i < text.length && J.includes(text[i]))) {
@@ -151,7 +152,7 @@
       const body = m[1], tail = m[2];
       const plain = body.replace(/[.!?。！？~]+$/, "");
       if (!plain.trim() || EMOJI_END.test(plain) || EMOJI_END.test(body) || plain.replace(/\s/g, "").length < 3) { out += part; continue; }
-      const recs = recommend(body).filter(e => e !== prev && !body.includes(e));
+      const recs = recommend(body).filter(e => e !== prev && !body.includes(e) && !/^[\u{1F1E6}-\u{1F1FF}]/u.test(e)); // 국기는 자동으로 안 붙임
       if (!recs.length) { out += part; continue; }
       prev = recs[0];
       out += body + recs[0] + tail;
