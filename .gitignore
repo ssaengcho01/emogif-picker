@@ -1,0 +1,7 @@
+signing/
+*.pfx
+*.key
+*.cer
+*.crt
+dist/
+*.exe

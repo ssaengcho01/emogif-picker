@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>이모지 피커</title>
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="이모지">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>
+@font-face { font-family: "Pretendard"; src: url("PretendardVariable.woff2") format("woff2-variations"), url("PretendardVariable.woff2") format("woff2"); font-weight: 45 920; font-display: swap; }
+:root {
+  --bg: #ffffff; --fg: #1f2328; --muted: #6b7280; --line: #e5e7eb; --hover: #f1f3f5; --accent: #3b82f6; --input: #f6f7f9; --kakao: #fee500;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --bg: #1e1f22; --fg: #e6e6e6; --muted: #9aa0a6; --line: #33353a; --hover: #2b2d31; --input: #2b2d31; }
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); }
+body {
+  font: 15px/1.4 "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  display: flex; flex-direction: column; height: 100dvh; overflow: hidden;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+}
+.top { padding: 10px 16px 8px; display: flex; flex-direction: column; gap: 8px; }
+.tray { border: 1px solid var(--line); border-radius: 12px; padding: 6px; background: var(--input); display: flex; flex-direction: column; gap: 6px; }
+.tray:focus-within { border-color: var(--accent); }
+.tray textarea { width: 100%; border: 0; background: none; color: var(--fg); font: inherit; font-size: 17px; resize: none; outline: none; padding: 4px 6px; min-height: 96px; max-height: 220px;
+  font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Apple Color Emoji", "Noto Color Emoji", sans-serif; }
+.tray .acts { display: flex; gap: 6px; align-items: center; }
+.btn.auto { background: color-mix(in srgb, var(--accent) 12%, var(--bg)); color: var(--accent); }
+.rec { background: color-mix(in srgb, var(--accent) 8%, var(--bg)); border-radius: 12px; margin-top: 8px; padding-bottom: 4px; }
+.rec .sec { background: transparent; position: static; color: var(--accent); font-weight: 700; }
+.btn { border: 0; border-radius: 9px; padding: 8px 12px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; background: var(--hover); color: var(--fg); white-space: nowrap; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.kakao { background: var(--kakao); color: #191919; }
+.btn.icon { padding: 8px 10px; font-weight: 400; }
+input[type=search], input[type=text] {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--input); color: var(--fg); font: inherit; font-size: 16px; outline: none; -webkit-appearance: none;
+}
+input:focus { border-color: var(--accent); }
+.tabs { display: flex; gap: 0; padding: 0 6px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 1 1 0; min-width: 26px; border: 0; background: none; padding: 8px 0 9px; font-size: 18px; line-height: 1; opacity: .5; filter: grayscale(.6); color: var(--fg); }
+.tab.txt { font-size: 12px; font-weight: 800; flex-grow: 1.3; }
+.tab.on { opacity: 1; filter: none; box-shadow: inset 0 -2px 0 var(--accent); }
+.body { flex: 1; overflow-y: auto; padding: 0 10px 12px; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.sec { font-size: 13px; color: var(--muted); padding: 10px 6px 4px; position: sticky; top: 0; background: var(--bg); z-index: 1; }
+.grid { display: grid; grid-template-columns: repeat(8, 1fr); }
+.e { border: 0; background: none; aspect-ratio: 1; padding: 0; border-radius: 10px; font-size: 28px; line-height: 1; color: var(--fg);
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",-apple-system,sans-serif; overflow: hidden; }
+.e.sym { font-family: "Pretendard", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", "Noto Sans Symbols 2", "Segoe UI Symbol", sans-serif; font-size: 24px; }
+.e.sym.long { font-size: 15px; }
+.e:active { background: var(--hover); }
+.pics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding-top: 6px; }
+.pics.four { grid-template-columns: repeat(4, 1fr); }
+.pic { position: relative; aspect-ratio: 1; border-radius: 10px; overflow: hidden; background: var(--hover); border: 0; padding: 0; }
+.pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pics.four .pic { background: transparent; border: 1px solid var(--line); }
+.pics.four .pic img { object-fit: contain; padding: 6px; }
+.pic.add { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); font-size: 14px; border: 1px dashed var(--line); background: none; }
+.pic.add b { font-size: 26px; font-weight: 400; }
+.empty { color: var(--muted); text-align: center; padding: 40px 16px; }
+.note { color: var(--muted); font-size: 13px; padding: 10px 6px 0; }
+.keybox { padding: 16px 6px; display: flex; flex-direction: column; gap: 10px; }
+.keybox p { margin: 0; }
+.keyrow { display: flex; gap: 8px; }
+.foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 16px calc(6px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; min-height: 32px; }
+.foot .credit { font-size: 11px; opacity: .8; }
+.toast { position: fixed; left: 50%; bottom: calc(60px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(20px); opacity: 0;
+  background: rgba(30,30,30,.92); color: #fff; padding: 10px 16px; border-radius: 20px; font-size: 14px; transition: .2s; pointer-events: none; white-space: nowrap; z-index: 9; }
+.toast.on { opacity: 1; transform: translateX(-50%); }
+.sheet { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: none; align-items: flex-end; z-index: 8; }
+.sheet.on { display: flex; }
+.sheet .in { background: var(--bg); width: 100%; border-radius: 16px 16px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 10px; }
+.sheet img { max-width: 160px; max-height: 160px; align-self: center; border-radius: 8px; }
+.sheet .btn { padding: 13px; font-size: 16px; }
+.crop { position: relative; align-self: center; max-width: 100%; touch-action: none; user-select: none; -webkit-user-select: none; line-height: 0; }
+.sheet .crop img { max-width: 100%; max-height: 44vh; border-radius: 0; display: block; }
+.cropbox { position: absolute; box-shadow: 0 0 0 9999px rgba(0,0,0,.5), inset 0 0 0 1px rgba(0,0,0,.35), 0 0 0 3px rgba(0,0,0,.25); outline: 2px solid #fff; cursor: move; touch-action: none; }
+.crop { overflow: hidden; border-radius: 8px; }
+.cropbox i { position: absolute; width: 26px; height: 26px; }
+.cropbox i::after { content: ""; position: absolute; width: 14px; height: 14px; background: #fff; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.25); top: 6px; left: 6px; }
+.cropbox i[data-k="nw"] { left: -6px; top: -6px; cursor: nwse-resize; } .cropbox i[data-k="ne"] { right: -6px; top: -6px; cursor: nesw-resize; }
+.cropbox i[data-k="sw"] { left: -6px; bottom: -6px; cursor: nesw-resize; } .cropbox i[data-k="se"] { right: -6px; bottom: -6px; cursor: nwse-resize; }
+.chips { display: flex; gap: 6px; justify-content: center; }
+.chip { border: 1px solid var(--line); background: var(--bg); color: var(--fg); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+.chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.toggle { display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 15px; white-space: nowrap; }
+.toggle input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); }
+.toggle small { color: var(--muted); font-size: 12px; }
+.btn:disabled { opacity: .4; }
+.tab.gear { color: var(--muted); display: flex; align-items: center; justify-content: center; margin-left: auto; }
+.tab.gear svg { display: block; }
+.tip { text-align: center; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.sheet .btn.danger { background: #e5484d; color: #fff; }
+.sheettitle { font-size: 16px; font-weight: 700; text-align: center; padding: 2px 4px 4px; line-height: 1.4; }
+.sheet input[type=text] { font: inherit; font-size: 16px; padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--bg); color: var(--fg); width: 100%; box-sizing: border-box; }
+.sheet input[type=text]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.sec.sethead { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-right: 0; }
+.sec .credit { font-size: 11px; color: var(--muted); opacity: .75; margin-left: 6px; font-weight: 400; }
+.sethead .more { border: 0; background: transparent; color: var(--muted); font-size: 20px; line-height: 1; padding: 2px 10px; cursor: pointer; border-radius: 8px; }
+.sethead .more:active { background: var(--hover); }
+</style>
+</head>
+<body>
+<div class="top">
+  <div class="tray">
+    <textarea id="msg" rows="4" placeholder="카톡에 보낼 말을 여기에 써 보세요"></textarea>
+    <div class="acts">
+      <button class="btn auto" id="auto">✨ 자동으로 붙이기</button>
+      <span style="flex:1"></span>
+      <button class="btn icon" id="clear" aria-label="모두 지우기">✕</button>
+      <button class="btn primary" id="copy">복사</button>
+      <button class="btn kakao" id="sendText">보내기</button>
+    </div>
+  </div>
+  <input type="search" id="q" placeholder="검색 (예: 웃음, 하트, 축하)" autocomplete="off" enterkeyhint="search">
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="body" id="body"></div>
+<div class="foot"><span id="hint">쓴 말에 맞춰 추천 · 누르면 글에 들어가요</span><span class="credit">@SSAENGCHO</span></div>
+<div class="toast" id="toast"></div>
+<div class="sheet" id="sheet"><div class="in" id="sheetIn"></div></div>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<script src="data.js"></script>
+<script src="picker.js"></script>
+<script src="sets.js"></script>
+<script src="recommend.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
