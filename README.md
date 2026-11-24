@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="../../releases/latest"><img src="docs/images/overview.png" width="100%" alt="EmoGIF Picker: 톡방·SNS 글을 이모지로 더 예쁘게"></a>
+<a href="../../releases/latest"><img src="docs/images/overview-v3.png" width="100%" alt="EmoGIF Picker: 톡방·SNS 글을 이모지로 더 예쁘게"></a>
 
 ## [⬇️ Windows용 무료 다운로드](../../releases/latest)
 
