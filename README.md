@@ -39,7 +39,7 @@
 
 ## 🚀 시작하기
 
-1. 오른쪽 **[Releases](../../releases/latest)** 에서 `EmoGIF-Picker.exe` 를 받아요.
+1. 오른쪽 **[Releases](../../releases/latest)** 에서 `EmoGIF.Picker.exe` 를 받아요.
 2. 원하는 폴더(예: 문서)에 두고 **더블클릭**하면 끝. 설치 과정이 없어요.
 3. 화면 오른쪽 아래 트레이에 😀 아이콘이 생기면 준비 완료!
 
